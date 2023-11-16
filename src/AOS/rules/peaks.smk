@@ -34,8 +34,7 @@ rule alSieve:
   params:
     rar = '--blackListFileName {}'.format(config['files']['readattractingregions']),
     size = '--maxFragmentLength {} --minFragmentLength 0'.format(config['vars']['fragsize'])
-  shell:'''
-  alignmentSieve --bam {input.bam} --outFile {output.shortb} --filterMetrics {output.qc} -p {threads} {params.rar} {params.size}
+  shell:'''  alignmentSieve --bam {input.bam} --outFile {output.shortb} --filterMetrics {output.qc} --genomeChunkLength 10000000 -p {threads} {params.rar} {params.size}
   '''
 
 rule ixSieve:
@@ -143,6 +142,8 @@ rule countmatrix:
         config['files']['readattractingregions']
     )
   threads: 40
+  resources:
+    mem_mb=10000
   conda: config['envs']['deeptools']
   shell:'''
   multiBamSummary BED-file --BED {input.peaks} {params.rar} \
