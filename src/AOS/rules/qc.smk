@@ -69,6 +69,8 @@ rule bigwigs:
     rar = config['files']['readattractingregions'],
     sample = "{sample}"
   threads: 10
+  resources:
+    mem_mb=10000
   conda: config['envs']['deeptools']
   shell:'''
   SCALEFAC=$(grep {params.sample} {input.scalefactors} | cut -f2 -d ' ')
